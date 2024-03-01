@@ -22,8 +22,8 @@
  * Includes
  *==============================================================================================================================================*/
 #include "stdint.h"
-#include "../../SERVICES/BIT_MATH.h"
-#include "../../SERVICES/STD_TYPES.h"
+#include "../../LIB/BIT_MATH.h"
+#include "../../LIB/STD_TYPES.h"
 #include "RCC_Config.h"
 #include "RCC_Interface.h"
 #include "RCC_Register.h"

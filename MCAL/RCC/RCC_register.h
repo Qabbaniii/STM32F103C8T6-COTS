@@ -19,8 +19,8 @@
 
 #ifndef MCAL_RCC_REGISTER_H_
 #define MCAL_RCC_REGISTER_H_
-#include "../../SERVICES/BIT_MATH.h"
-#include "../../SERVICES/STD_TYPES.h"
+#include "../../LIB/BIT_MATH.h"
+#include "../../LIB/STD_TYPES.h"
 
 typedef struct {
 	uint32 		RCC_CR ;
