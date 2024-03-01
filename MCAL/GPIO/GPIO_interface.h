@@ -1,4 +1,3 @@
-
 /**********************************************************************************
  *	FILE DESCRIPTION
  **********************************************************************************
@@ -60,7 +59,7 @@ typedef enum
 {
     ANALOG = 0,
     INPUT_FLOATING,
-	INPUT_PULL,
+	INPUT_PULL
 } InputMode_t;
 
 typedef enum
@@ -85,14 +84,6 @@ typedef enum
     PIN_HIGH
 } PinVal_t;
 
-#define TWO_PIN_ACCESS                  2u
-#define FOUR_PIN_ACCESS                 4u
-
-#define TWO_BIT_MASK                    0b11
-#define ONE_BIT_MASK                    0b1
-
-#define OK 								1
-#define NOK 							0
 
 typedef struct
 {

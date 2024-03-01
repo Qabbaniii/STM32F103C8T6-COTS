@@ -25,7 +25,11 @@
 #include "../../LIB/STD_TYPES.h"
 #include "../../LIB/STM32F103.h"
 #include "GPIO_Interface.h"
+#include "GPIO_private.h"
 
+/*********************************************************************************
+ *	LOCAL VARIABLE
+ *********************************************************************************/
 
 /* static array of 8 pointers (the GPIO Ports) to avoid using "switch case" */
 
@@ -47,22 +51,24 @@ static GPIO_RegDef_t *GPIO_PORT[7] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, 
 uint8 GPIO_u8PinInit(const PinConfig_t * PinConfig) 
 {
 	uint8_t Local_u8ErrorStatus = OK;
+	if(PinConfig != NULL)
+	{
 		if((PinConfig->PortName <= PORTG) && (PinConfig->PinNum <= PIN15) )
 		{
-			uint8_t LOC_u8RegNum = (PinConfig->PinNum) / 8;
-			uint8_t LOC_u8BitNum = ((PinConfig->PinNum) % 8) * 4;
+			uint8_t LOC_u8RegNum = (PinConfig->PinNum) / 8u;
+			uint8_t LOC_u8BitNum = ((PinConfig->PinNum) % 8u) * FOUR_PIN_ACCESS;
 
-			/*Selecting Mode */
+			/*Selecting Mode  [INPUT , OUTPUT_10MHZ, OUTPUT_2MHZ, OUTPUT_50MHZ] */
 			GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] &= ~(TWO_BIT_MASK << LOC_u8BitNum);
-			GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |= ((PinConfig->Mode) << LOC_u8BitNum);
+			GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |=  ((PinConfig->Mode) << LOC_u8BitNum);
 
-			/*Selecting Mode Type*/
+			/* if Output Types select type : [OUT_PUSH_PULL , OUT_OPEN_DRAIN, AF_PUSH_PULL, AF_OPEN_DRAIN] */
 			if (PinConfig->Mode > INPUT)
 			{
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] &= ~(TWO_BIT_MASK << (LOC_u8BitNum + 2));
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |= ((PinConfig->OutputMode) << (LOC_u8BitNum + 2));
 			}
-			else
+			else   /* if Intput Types select type : [ANALOG , INPUT_FLOATING, INPUT_PULL] */
 			{
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] &= ~(TWO_BIT_MASK << (LOC_u8BitNum + 2));
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |= ((PinConfig->InputMode) << (LOC_u8BitNum + 2));
@@ -72,7 +78,13 @@ uint8 GPIO_u8PinInit(const PinConfig_t * PinConfig)
 		{
 			Local_u8ErrorStatus = NOK;
 		}
-		return Local_u8ErrorStatus;
+		
+	}
+	else
+	{
+		Local_u8ErrorStatus = NULL_PTR ;
+	}
+	return Local_u8ErrorStatus;
 }
 
 /*
