@@ -1,3 +1,4 @@
+
 /**********************************************************************************
  *	FILE DESCRIPTION
  **********************************************************************************
@@ -17,7 +18,8 @@
  *
  **********************************************************************************/
 
-
+#ifndef GPIO_GPIO_INTERFACE_H_
+#define GPIO_GPIO_INTERFACE_H_
 /***********************************************************************************
  * 	INCLUDES
  **********************************************************************************/
@@ -59,7 +61,7 @@ typedef enum
 {
     ANALOG = 0,
     INPUT_FLOATING,
-	INPUT_PULL
+	INPUT_PULL,
 } InputMode_t;
 
 typedef enum
@@ -84,7 +86,12 @@ typedef enum
     PIN_HIGH
 } PinVal_t;
 
+#define TWO_PIN_ACCESS                  2u
+#define FOUR_PIN_ACCESS                 4u
 
+#define TWO_BIT_MASK                    0b11
+#define ONE_BIT_MASK                    0b1
+#define FOUR_BIT_MASK					0b1111
 typedef struct
 {
     Port_t 		 PortName;
@@ -103,7 +110,8 @@ uint8_t GPIO_u8PinInit(const PinConfig_t *PinConfig);
 uint8_t GPIO_u8SetPinValue(Port_t PortName, Pin_t PinNum, PinVal_t PinVal);
 uint8_t GPIO_u8TogglePinValue(Port_t PortName, Pin_t PinNum);
 uint8_t GPIO_u8ReadPinValue(Port_t PortName, Pin_t PinNum, PinVal_t *PinVal);
-
+void GPIO_u8SetFourPortValue(Port_t PortName, Pin_t PinNum, uint8_t PinVal);
 /**********************************************************************************
  *	END OF FILE: GPIO_interface.h
  **********************************************************************************/
+#endif

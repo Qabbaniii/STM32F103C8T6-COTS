@@ -24,12 +24,10 @@
 #include "../../LIB/BIT_MATH.h"
 #include "../../LIB/STD_TYPES.h"
 #include "../../LIB/STM32F103.h"
+#include "../../LIB/ERROR_TYPES.h"
 #include "GPIO_Interface.h"
-#include "GPIO_private.h"
 
-/*********************************************************************************
- *	LOCAL VARIABLE
- *********************************************************************************/
+
 
 /* static array of 8 pointers (the GPIO Ports) to avoid using "switch case" */
 
@@ -51,24 +49,22 @@ static GPIO_RegDef_t *GPIO_PORT[7] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, 
 uint8 GPIO_u8PinInit(const PinConfig_t * PinConfig) 
 {
 	uint8_t Local_u8ErrorStatus = OK;
-	if(PinConfig != NULL)
-	{
 		if((PinConfig->PortName <= PORTG) && (PinConfig->PinNum <= PIN15) )
 		{
-			uint8_t LOC_u8RegNum = (PinConfig->PinNum) / 8u;
-			uint8_t LOC_u8BitNum = ((PinConfig->PinNum) % 8u) * FOUR_PIN_ACCESS;
+			uint8_t LOC_u8RegNum = (PinConfig->PinNum) / 8;
+			uint8_t LOC_u8BitNum = ((PinConfig->PinNum) % 8) * 4;
 
-			/*Selecting Mode  [INPUT , OUTPUT_10MHZ, OUTPUT_2MHZ, OUTPUT_50MHZ] */
+			/*Selecting Mode */
 			GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] &= ~(TWO_BIT_MASK << LOC_u8BitNum);
-			GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |=  ((PinConfig->Mode) << LOC_u8BitNum);
+			GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |= ((PinConfig->Mode) << LOC_u8BitNum);
 
-			/* if Output Types select type : [OUT_PUSH_PULL , OUT_OPEN_DRAIN, AF_PUSH_PULL, AF_OPEN_DRAIN] */
+			/*Selecting Mode Type*/
 			if (PinConfig->Mode > INPUT)
 			{
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] &= ~(TWO_BIT_MASK << (LOC_u8BitNum + 2));
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |= ((PinConfig->OutputMode) << (LOC_u8BitNum + 2));
 			}
-			else   /* if Intput Types select type : [ANALOG , INPUT_FLOATING, INPUT_PULL] */
+			else
 			{
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] &= ~(TWO_BIT_MASK << (LOC_u8BitNum + 2));
 				GPIO_PORT[PinConfig->PortName]->CR[LOC_u8RegNum] |= ((PinConfig->InputMode) << (LOC_u8BitNum + 2));
@@ -78,13 +74,7 @@ uint8 GPIO_u8PinInit(const PinConfig_t * PinConfig)
 		{
 			Local_u8ErrorStatus = NOK;
 		}
-		
-	}
-	else
-	{
-		Local_u8ErrorStatus = NULL_PTR ;
-	}
-	return Local_u8ErrorStatus;
+		return Local_u8ErrorStatus;
 }
 
 /*
@@ -163,7 +153,21 @@ uint8 GPIO_u8TogglePinValue(Port_t portName ,Pin_t pinNum)
 	 	return Local_u8ErrorStatus;
  }
 
-
+ /*
+  * Prototype   : void GPIO_u8SetFourPortValue(PORT_t Port, Pin_t PinNum, PinVal_t PinVal)
+  * Description : Set Value of 4 Pins
+  * Arguments   : PORT(PORTA , PORTB,PORTC)
+  *               PinNum(PIN1 ..... PIN15)
+  *               pinVal(0x00 to 0x0F)
+  * return      : void
+  */
+ void GPIO_u8SetFourPortValue(Port_t PortName, Pin_t PinNum, uint8_t PinVal)
+ {
+ 	uint32_t LOC_u32Value = 0;
+ 	GPIO_PORT[PortName]->ODR &= ~(FOUR_BIT_MASK << PinNum);
+ 	LOC_u32Value = GPIO_PORT[PortName]->ODR | (PinVal << PinNum);
+ 	GPIO_PORT[PortName]->ODR = LOC_u32Value;
+ }
 /**************************************************************************************
  *  END OF FILE: GPIO_Program.c
  **************************************************************************************/
