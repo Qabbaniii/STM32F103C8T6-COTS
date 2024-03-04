@@ -22,6 +22,7 @@
 
 #define OK        1u
 #define NOK       2u
+#define NULL      (void*)0
 #define NULL_PTR  3u
 
 #endif
