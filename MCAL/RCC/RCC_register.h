@@ -19,24 +19,7 @@
 
 #ifndef MCAL_RCC_REGISTER_H_
 #define MCAL_RCC_REGISTER_H_
-#include "../../LIB/BIT_MATH.h"
-#include "../../LIB/STD_TYPES.h"
-
-typedef struct {
-	uint32 		RCC_CR ;
-	uint32 		RCC_CFGR ;
-	uint32 		RCC_CIR ;
-	uint32 		RCC_APB2RSTR ;
-	uint32 		RCC_APB1RSTR ;
-	uint32      RCC_AHBENR ;
-	uint32      RCC_APB2ENR ;
-	uint32		RCC_APB1ENR ;
-	uint32 		RCC_BDCR;
-	uint32		RCC_CSR ;
-}RCC_reg;
-
-RCC_reg* RCC = (RCC_reg*)(0x40021000);
-
+#include "../../LIB/STM32F103.h"
 /*RCC clock control register RCC_CR pins*/
 enum{
 	HSION,HSIRDY,HSITRIM0=3,HSITRIM1,HSITRIM2,HSITRIM3,HSITRIM4,

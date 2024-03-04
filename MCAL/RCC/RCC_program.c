@@ -23,7 +23,6 @@
  *==============================================================================================================================================*/
 #include "stdint.h"
 #include "../../LIB/BIT_MATH.h"
-#include "../../LIB/STD_TYPES.h"
 #include "RCC_Config.h"
 #include "RCC_Interface.h"
 #include "RCC_Register.h"
@@ -51,9 +50,9 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 				case CLK_ON:
 				{
 					/* HSE ON */
-					SET_BIT(RCC->RCC_CR,HSEON);
+					SET_BIT(RCC->CR,HSEON);
 					/* Waiting until Clock is Ready or timeout is reached */
-					while( (GET_BIT(RCC->RCC_CR,HSERDY) == 0 ) && (LOC_u16Timeout <= TimeoutMax) )
+					while( (GET_BIT(RCC->CR,HSERDY) == 0 ) && (LOC_u16Timeout <= TimeoutMax) )
 					{
 						LOC_u16Timeout ++ ;
 					}
@@ -66,7 +65,7 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 				case CLK_OFF:
 				{
 					/*  HSE OFF */
-					CLR_BIT(RCC -> RCC_CR,HSEON);
+					CLR_BIT(RCC -> CR,HSEON);
 				}break;
 			}
 		}break;
@@ -78,9 +77,9 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 				case CLK_ON:
 				{
 					/* HSE ON */
-					SET_BIT(RCC->RCC_CR,HSION);
+					SET_BIT(RCC->CR,HSION);
 					/* Waiting until Clock is Ready or timeout is reached */
-					while(GET_BIT(RCC->RCC_CR,HSIRDY == 0 ) && (LOC_u16Timeout <= TimeoutMax) )
+					while(GET_BIT(RCC->CR,HSIRDY == 0 ) && (LOC_u16Timeout <= TimeoutMax) )
 					{
 						LOC_u16Timeout ++ ;
 					}
@@ -93,7 +92,7 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 				case CLK_OFF:
 				{
 					/*  HSE OFF */
-					CLR_BIT(RCC->RCC_CR,HSION);
+					CLR_BIT(RCC->CR,HSION);
 				}break;
 			}
 		}break;
@@ -105,9 +104,9 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 				case CLK_ON :
 				{
 				/* PLL ON */
-				SET_BIT(RCC -> RCC_CR,PLLON);
+				SET_BIT(RCC -> CR,PLLON);
 				/*  Waiting until Clock is Ready or timeout is reached */
-				while( GET_BIT(RCC ->RCC_CR  ,PLLRDY) == 0  && LOC_u16Timeout <= TimeoutMax)
+				while( GET_BIT(RCC ->CR  ,PLLRDY) == 0  && LOC_u16Timeout <= TimeoutMax)
 				{
 					LOC_u16Timeout ++ ;
 				}
@@ -120,7 +119,7 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 				case CLK_OFF :
 				{
 				/* PLL OFF */
-				CLR_BIT(RCC ->RCC_CR,PLLON);
+				CLR_BIT(RCC ->CR,PLLON);
 				}break;
 			}
 		}break;
@@ -139,7 +138,7 @@ uint8 RCC_u8SetClkStatus (uint8 copy_u8SysClk ,uint8 copy_u8Status)
 void RCC_vSetSysClk(uint8 copy_u8ClkType)
 {
 	/* bit masking */
-		RCC->RCC_CFGR &= ~( 0b11 << SW0 );
+		RCC->CFGR &= ~( 0b11 << SW0 );
 	/* Check SYSCLK */
 	switch (copy_u8ClkType )
 	{
@@ -147,20 +146,20 @@ void RCC_vSetSysClk(uint8 copy_u8ClkType)
 	case HSE:
 		{
 			/* SET HSE AS SYSCLK */
-			SET_BIT(RCC -> RCC_CFGR,SW0);
-			CLR_BIT(RCC -> RCC_CFGR,SW1);
+			SET_BIT(RCC -> CFGR,SW0);
+			CLR_BIT(RCC -> CFGR,SW1);
 		}break;
 	case HSI:
 		{
 			/* SET HSI AS SYSCLK */
-			CLR_BIT(RCC -> RCC_CFGR,SW0);
-			CLR_BIT(RCC -> RCC_CFGR,SW1);
+			CLR_BIT(RCC -> CFGR,SW0);
+			CLR_BIT(RCC -> CFGR,SW1);
 		}break;
 	case PLL:
 		{
 			/* SET PLL AS SYSCLK */
-			CLR_BIT(RCC -> RCC_CFGR,SW0);
-			SET_BIT(RCC -> RCC_CFGR,SW1);
+			CLR_BIT(RCC -> CFGR,SW0);
+			SET_BIT(RCC -> CFGR,SW1);
 		}break;
 	}
 }
@@ -176,11 +175,11 @@ void RCC_vHSEBypassStatus(uint8 copy_u8HSEBypassStatus)
 	/* Check bypass is on or not */
 	if ( copy_u8HSEBypassStatus == BYPASS_ON  )
 	{
-		SET_BIT(RCC ->RCC_CR,HSEBYP);
+		SET_BIT(RCC ->CR,HSEBYP);
 	}
 	else if ( copy_u8HSEBypassStatus == BYPASS_OFF  )
 	{
-		CLR_BIT(RCC ->RCC_CR,HSEBYP);
+		CLR_BIT(RCC ->CR,HSEBYP);
 	}
 
 }
@@ -195,11 +194,11 @@ void RCC_vHSEHSEToPLLPrescaler(uint8 copy_u8HSEToPLLPrescaler)
 	/* HSE to PLL divider config */
 	if ( copy_u8HSEToPLLPrescaler == HSE_CLK_divided_by_2 )
 	{
-		SET_BIT(RCC ->RCC_CR,PLLXTPRE);
+		SET_BIT(RCC ->CR,PLLXTPRE);
 	}
 	else if ( copy_u8HSEToPLLPrescaler == HSE_CLK_divided_by_1  )
 	{
-		CLR_BIT(RCC ->RCC_CR,PLLXTPRE);
+		CLR_BIT(RCC ->CR,PLLXTPRE);
 	}
 }
 /*
@@ -212,18 +211,18 @@ void RCC_vHSEHSEToPLLPrescaler(uint8 copy_u8HSEToPLLPrescaler)
 void RCC_vPLLConfig(uint8 copy_PLLMull,uint8 copy_PLLSrc)
 {
 	/* bit masking */
-	RCC ->RCC_CFGR &= ~( 0b1111 << PLLMUL0 );
+	RCC ->CFGR &= ~( 0b1111 << PLLMUL0 );
 	/* Set PLL Multiplication Factor */
-	RCC ->RCC_CFGR |= ( copy_PLLMull  << PLLMUL0 );
+	RCC ->CFGR |= ( copy_PLLMull  << PLLMUL0 );
 
 	/* check PLL CLK Source*/
 	if ( copy_PLLSrc == HSE )
 	{
-		SET_BIT(RCC->RCC_CFGR, PLLSRC);
+		SET_BIT(RCC->CFGR, PLLSRC);
 	}
 	else if ( copy_PLLSrc == HSI)
 	{
-		CLR_BIT(RCC->RCC_CFGR, PLLSRC);
+		CLR_BIT(RCC->CFGR, PLLSRC);
 	}
 }
 /*
@@ -237,9 +236,9 @@ void RCC_vPLLConfig(uint8 copy_PLLMull,uint8 copy_PLLSrc)
 void RCC_vAHBPrescaler(uint8 copy_u8prescaler)
 {
 	/* bit masking */
-	RCC->RCC_CFGR &= ~(0b1111<< HPRE0);
+	RCC->CFGR &= ~(0b1111<< HPRE0);
 	/* set AHB Prescaler */
-	RCC->RCC_CFGR |=  (copy_u8prescaler << HPRE0);
+	RCC->CFGR |=  (copy_u8prescaler << HPRE0);
 
 
 }
@@ -254,9 +253,9 @@ void RCC_vAHBPrescaler(uint8 copy_u8prescaler)
 void RCC_vAPB1Prescaler(uint8 copy_u8prescaler)
 {
 	/* bit masking */
-	RCC->RCC_CFGR &= ~(0b111<< PPRE10);
+	RCC->CFGR &= ~(0b111<< PPRE10);
 	/* set APB1 Prescaler */
-	RCC->RCC_CFGR |=  (copy_u8prescaler << PPRE10);
+	RCC->CFGR |=  (copy_u8prescaler << PPRE10);
 }
 /*
  * Prototype   : void RCC_vAPB2Prescaler(uint8 copy_u8prescaler)
@@ -269,9 +268,9 @@ void RCC_vAPB1Prescaler(uint8 copy_u8prescaler)
 void RCC_vAPB2Prescaler(uint8 copy_u8prescaler)
 {
 	/* bit masking */
-	RCC->RCC_CFGR &= ~(0b111<< PPRE20);
+	RCC->CFGR &= ~(0b111<< PPRE20);
 	/* set APB2 Prescaler */
-	RCC->RCC_CFGR |=  (copy_u8prescaler << PPRE20);
+	RCC->CFGR |=  (copy_u8prescaler << PPRE20);
 }
 
 /*
@@ -285,9 +284,9 @@ void RCC_vAPB2Prescaler(uint8 copy_u8prescaler)
 void RCC_vADCPrescaler(uint8 copy_u8prescaler)
 {
 	/* bit masking */
-	RCC->RCC_CFGR &= ~(0b11<< ADCPRE0);
+	RCC->CFGR &= ~(0b11<< ADCPRE0);
 	/* set ADC Prescaler */
-	RCC->RCC_CFGR |=  (copy_u8prescaler << ADCPRE0);
+	RCC->CFGR |=  (copy_u8prescaler << ADCPRE0);
 }
 
 /*
@@ -299,7 +298,7 @@ void RCC_vADCPrescaler(uint8 copy_u8prescaler)
 void RCC_vAHBEnableClk(uint8 copy_u8prephiral)
 {
 	/* Enable Required AHB Peripheral */
-	SET_BIT(RCC ->RCC_AHBENR,copy_u8prephiral);
+	SET_BIT(RCC ->AHBENR,copy_u8prephiral);
 
 }
 /*
@@ -311,7 +310,7 @@ void RCC_vAHBEnableClk(uint8 copy_u8prephiral)
 void RCC_vAHBDisableCLK(uint8 copy_u8prephiral)
 {
 	/* Disable Required AHB Peripheral */
-	CLR_BIT(RCC ->RCC_AHBENR,copy_u8prephiral);
+	CLR_BIT(RCC ->AHBENR,copy_u8prephiral);
 
 }
 /*
@@ -326,7 +325,7 @@ void RCC_vAHBDisableCLK(uint8 copy_u8prephiral)
 void RCC_vAPB2EnableClk(uint8 copy_u8prephiral)
 {
 	/* Enable Required APB2 Peripheral */
-	SET_BIT(RCC ->RCC_APB2ENR,copy_u8prephiral);
+	SET_BIT(RCC ->APB2ENR,copy_u8prephiral);
 }
 /*
  * Prototype   : void RCC_vAPB2DisableClk(uint8 copy_u8prephiral)
@@ -340,7 +339,7 @@ void RCC_vAPB2EnableClk(uint8 copy_u8prephiral)
 void RCC_vAPB2DisableClk(uint8 copy_u8prephiral)
 {
 	/* Disable Required APB2 Peripheral */
-	CLR_BIT(RCC ->RCC_APB2ENR,copy_u8prephiral);
+	CLR_BIT(RCC ->APB2ENR,copy_u8prephiral);
 }
 /*
  * Prototype   : void RCC_vAPB1EnableCLK(uint8 copy_u8prephiral)
@@ -353,7 +352,7 @@ void RCC_vAPB2DisableClk(uint8 copy_u8prephiral)
 void RCC_vAPB1EnableClk(uint8 copy_u8prephiral)
 {
 	/* Enable Required APB1 Peripheral */
-	SET_BIT(RCC ->RCC_APB1ENR,copy_u8prephiral);
+	SET_BIT(RCC ->APB1ENR,copy_u8prephiral);
 }
 /*
  * Prototype   : void RCC_vAPB1DisableCLK(uint8 copy_u8prephiral)
@@ -366,7 +365,7 @@ void RCC_vAPB1EnableClk(uint8 copy_u8prephiral)
 void RCC_vAPB1DisableCLK(uint8 copy_u8prephiral)
 {
 	/* Disable Required APB1 Peripheral */
-	CLR_BIT(RCC ->RCC_APB1ENR,copy_u8prephiral);
+	CLR_BIT(RCC ->APB1ENR,copy_u8prephiral);
 }
 
 
